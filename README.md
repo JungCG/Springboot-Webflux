@@ -7,8 +7,17 @@
 ## Contents
 1. [Using](#using)
 2. [Reactive Programming](#reactive-programming)
-3. [WebFlux](#webFlux)
-4. [License](#license)
+3. [WebFlux와 SSE](#webFlux와-sse)
+4. [Projects](#projects)
+5. [License](#license)
+
+--------------------------------------------
+
+## Using
+1. Spring Reactive Web : Servlet으로 동작 안하고 Netty라는 서버 사용 / 비동기 서버로 동작
+2. Spring Data R2DBC [참고](https://spring.io/guides/gs/accessing-data-r2dbc/) : 비동기 데이터베이스 지원 / JPA를 사용하면 Blocking 발생 (단일 스레드 의미가 없다.)
+
+--------------------------------------------
 
 ## Reactive Programming
 1. 정의 - (Reactive, 반응형) 어떤 요청이 있을 때 **기다리지 않고 응답**한다.
@@ -42,7 +51,7 @@
 
 --------------------------------------------
 
-## WebFlux
+## WebFlux와 SSE
 1. **SSE** (Server Send Event)
     - **서버쪽에서 주도적으로 메시지를 send 할 수 있는 이벤트**
     - **Push 기술**
@@ -57,6 +66,33 @@
     - MongoDB 같은 NoSQL을 사용해야 한다.
     - R2DBC에서는 RDBMS에서 비동기 처리 가능 (비동기 데이터베이스)
     - Flux는 지속적으로 응답 (1개 이상), Mono는 한번만 응답 (0~1개)
+4. **SSE와 WebFlux 비교**
+    - WebFlux
+        1. 단일스레드, 비동기 + Stream
+        2. 백프레셔가 적용된 데이터만큼 간헐적 응답이 가능
+        3. 데이터 소비가 끝나면 응답이 종료
+    - SSE
+        1. Servlet, WebFlux
+        2. 데이터 소비가 끝나도 Stream 계속 유지
+
+--------------------------------------------
+
+## Projects
+1. Project **reactive**-**test** : webflux library를 사용하지 않고 구현 (원리)
+    1. **MyPub**.java : Publisher 구현
+    2. **MySub**.java : Subscriber 구현
+    3. **MySubscription**.java : Subscription 구현
+2. Project **fluxtest** : 필터를 이용하여 Flux 구현
+    1. **MyFilter**.java : Flux 구현
+    2. **MyFilter2**.java : Data 추가
+    3. **MyFilterConfig**.java : MyFilter, MyFilter2 필터 등록
+    4. **EventNotify**.java : 입력 데이터, 상태 클래스
+3. Project **flux** : Reactive Streams 사용하여 구현
+    1. **Customer**.java : Customer 클래스
+    2. **CustomerRepository**.java : extends ReactiveCrudRepository<Customer, Long> (JPA가 아니다.)
+    3. **CustomerController**.java : Controller 클래스
+    4. **DBInit**.java [참고](https://spring.io/guides/gs/accessing-data-r2dbc/) : DB 초기화 및 테스트
+    5. schema.sql : Customer 테이블 생성
     
 --------------------------------------------
 
